@@ -3,7 +3,7 @@ use rayon::prelude::*;
 
 const SOLID_THRESHOLD: u8 = 0x40;
 // const IMAGE_PATH: &str = "samples/p1.png";
-const IMAGE_PATH: &str = "samples/4096x4096_circle_r3999.png";
+const IMAGE_PATH: &str = "samples/4096x4096_circle_3999.png";
 
 // const PIXEL_LENGTH_MM: f64 = 0.1;
 const PIXEL_LENGTH_MM: f64 = 2f64 / 3999f64;
