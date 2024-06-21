@@ -1,26 +1,39 @@
 use std::fs::File;
+use std::io;
 use rayon::prelude::*;
 
 const SOLID_THRESHOLD: u8 = 0x40;
-// const IMAGE_PATH: &str = "samples/p1.png";
-const IMAGE_PATH: &str = "samples/4096x4096_circle_3999.png";
+// const IMAGE_PATH: &str = "image.png";
 
 // const PIXEL_LENGTH_MM: f64 = 0.1;
-const PIXEL_LENGTH_MM: f64 = 2f64 / 3999f64;
+// const PIXEL_LENGTH_MM: f64 = 2f64 / 3999f64;
 // const PIXEL_LENGTH_MM: f64 = 35f64 / (486 - 21) as f64;
 
 fn main() {
+    // Get user input
+    println!("Enter path to the image file:");
+    let mut image_path = String::new();
+    io::stdin().read_line(&mut image_path).expect("error reading from stdin");
     // Decode PNG
     let decoder = png::Decoder::new(
-        File::open(IMAGE_PATH).unwrap()
+        File::open(image_path.trim_start().trim_end()).unwrap()
     );
     let mut reader = decoder.read_info().unwrap();
     let mut buf = vec![0; reader.output_buffer_size()];
     let info = reader.next_frame(&mut buf).unwrap();
     let bytes = &buf[..info.buffer_size()];
     let (w, h) = (info.width, info.height);
-    // Debug
-    println!("Image Width: {} px\nImage Height: {} px",w,h);
+    // More user interaction
+    println!("Image loaded.\nWidth: {} px\nHeight: {} px",w,h);
+    println!("how many pixels in this image is one mm?");
+    let mut user_input = String::new();
+    io::stdin().read_line(&mut user_input).expect("error reading from stdin");
+    let px_per_mm:f64 = user_input
+        .trim_start()
+        .trim_end()
+        .parse()
+        .expect("error parsing value");
+    let mm_per_px:f64 = 1.0 / px_per_mm;
     // Calculate CoS
     let (
         area,
@@ -81,8 +94,8 @@ fn main() {
         )
     });
     // Conversion from pixels^4 to mm^4.
-    let moment_x_mm = moment_x as f64 * PIXEL_LENGTH_MM.powi(4);
-    let moment_y_mm = moment_y as f64 * PIXEL_LENGTH_MM.powi(4);
+    let moment_x_mm = moment_x as f64 * mm_per_px.powi(4);
+    let moment_y_mm = moment_y as f64 * mm_per_px.powi(4);
     println!(
         "Area Moments Of Inertia:\nIx = {:.4} mm^4\nIy = {:.4} mm^4",
         moment_x_mm, moment_y_mm
