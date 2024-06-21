@@ -4,5 +4,15 @@ I wrote this program because i couldn't get my CAD software to calculate the are
 
 ## How To Use
 
-Put a png file named "image.png" in the same directory as the one you are running the software from. results will be output to the terminal.
-I will improve this soon.
+the program will request a file path to a png image of your cross-section.
+The cross-section should be in white and the background black (though technically only the red channel will be looked at).
+The image should have only 3 channels (no alpha / transparency).
+
+The program will then load the image and request the scale of the image, in pixels per mm.
+
+Once both are submited the results will be printed.
+
+## TODO
+
+- allow input of the path and scale via command line arguments.
+- allow output to a file via command line arguments.
